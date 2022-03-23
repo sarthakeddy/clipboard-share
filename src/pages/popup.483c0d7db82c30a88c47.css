@@ -71,6 +71,15 @@
     background: rgba(231, 151, 151, 0.15);
 }
 
+.icon-share {
+    border-color: rgba(222, 150, 231, 0.3);
+    color: rgb(209, 141, 226);
+}
+
+.icon-share-hover {
+    background: rgba(218, 151, 231, 0.15);
+}
+
 .display-more-text {
     color: rgb(113, 163, 199);
     cursor: pointer;

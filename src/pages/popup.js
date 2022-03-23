@@ -9364,33 +9364,7 @@
                 className: "eraser-button"
             }, i.createElement(v.a, {
                 icon: "eraser"
-            })), i.createElement("button", {
-                onClick: e => chrome.runtime.openOptionsPage()
-            }, i.createElement(v.a, {
-                icon: "cog"
-            }))), i.createElement(g, {
-                search: n,
-                onChange: e => this.setState({
-                    search: e
-                })
-            }), i.createElement("div", {
-                className: "help-buttons-wrapper"
-            }, i.createElement("button", {
-                className: "button-url",
-                onClick: e => this.writeURL()
-            }, i.createElement(v.a, {
-                icon: d
-            }), i.createElement("h6", null, "Save URL")), "" != n && i.createElement("button", {
-                className: "button-add-note",
-                onClick: e => this.writeNote()
-            }, i.createElement(v.a, {
-                icon: "pencil-alt"
-            }), i.createElement("h6", null, "Add to Clipboard"))), "" != r && i.createElement("p", {
-                className: "notification"
-            }, r, "" != o && i.createElement("span", {
-                className: "undo-text",
-                onClick: () => this.undoDelete()
-            }, " Undo?")), this.mapClipboardToNotes(t)))
+            }))), this.mapClipboardToNotes(t)))
         }
     }
     var _ = Object(o.b)(e => ({
