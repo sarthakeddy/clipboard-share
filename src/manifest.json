@@ -1,5 +1,5 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Clipboard Share",
   "version": "2.2.2",
   "description": "Clipboard Share allows you to quickly copy and paste text, urls and more, share them to other device, and store them safely in your browser for future use.",
