@@ -9275,7 +9275,7 @@
             }
         }
         removeAllNotes() {
-            this.props.updateClipboard([]), this.setNotification("Deleted all notes!", 1500)
+            this.props.updateClipboard([]), this.setNotification("Deleted all!!", 1500)
         }
         setNotification(e, t) {
             this.setState({
@@ -9355,7 +9355,7 @@
                     undoText: o
                 } = this.state;
             return i.createElement("div", null, this.state.hasModalOpen && i.createElement(T, {
-                label: "Are you sure you want to delete all your notes? This action is irreversible.",
+                label: "Are you sure you want to delete all your saved notes?",
                 title: "Delete All Notes?",
                 confirmText: "Delete",
                 onConfirm: () => {
