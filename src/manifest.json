@@ -4,13 +4,13 @@
   "version": "1.0",
   "description": "Clipboard Share allows you to quickly copy and paste text, urls and more, share them to other device, and store them safely in your browser for future use.",
   "icons": {
-    "128": "./static/icon128.png",
-    "48": "./static/icon48.png",
-    "16": "./static/icon16.png"
+    "128": "./static/icon.png",
+    "48": "./static/icon.png",
+    "16": "./static/icon.png"
   },
   "options_page": "./pages/options.html",
   "browser_action": {
-    "default_icon": "./static/icon16.png",
+    "default_icon": "./static/icon.png",
     "default_popup": "./pages/popup.html"
   },
   "background": {
