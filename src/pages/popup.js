@@ -9363,7 +9363,7 @@
                 id: "header"
             }, i.createElement("h2", {
                 className: "title"
-            }, "Easy Clipboard", i.createElement("span", {
+            }, "Clipboard Share", i.createElement("span", {
                 className: "title-line"
             })), i.createElement("button", {
                 onClick: e => this.setState({
@@ -9417,7 +9417,7 @@
     var P = C;
     l.b.add(h, m, c, u, s, p, f);
     const O = new a.Store({
-        portName: "easy-clipboard"
+        portName: "clipboard-share"
     });
     O.ready().then(() => {
         let e = document.createElement("div");
