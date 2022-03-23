@@ -108,179 +108,6 @@
     }).call(this, n(4), n(24)(e))
 }, function(e, t, n) {
     "use strict";
-    n.d(t, "a", (function() {
-        return f
-    })), n.d(t, "b", (function() {
-        return c
-    })), n.d(t, "c", (function() {
-        return l
-    }));
-    var r = n(5),
-        o = function() {
-            return Math.random().toString(36).substring(7).split("").join(".")
-        },
-        i = {
-            INIT: "@@redux/INIT" + o(),
-            REPLACE: "@@redux/REPLACE" + o(),
-            PROBE_UNKNOWN_ACTION: function() {
-                return "@@redux/PROBE_UNKNOWN_ACTION" + o()
-            }
-        };
-
-    function a(e) {
-        if ("object" != typeof e || null === e) return !1;
-        for (var t = e; null !== Object.getPrototypeOf(t);) t = Object.getPrototypeOf(t);
-        return Object.getPrototypeOf(e) === t
-    }
-
-    function l(e, t, n) {
-        var o;
-        if ("function" == typeof t && "function" == typeof n || "function" == typeof n && "function" == typeof arguments[3]) throw new Error("It looks like you are passing several store enhancers to createStore(). This is not supported. Instead, compose them together to a single function.");
-        if ("function" == typeof t && void 0 === n && (n = t, t = void 0), void 0 !== n) {
-            if ("function" != typeof n) throw new Error("Expected the enhancer to be a function.");
-            return n(l)(e, t)
-        }
-        if ("function" != typeof e) throw new Error("Expected the reducer to be a function.");
-        var u = e,
-            c = t,
-            s = [],
-            f = s,
-            d = !1;
-
-        function p() {
-            f === s && (f = s.slice())
-        }
-
-        function h() {
-            if (d) throw new Error("You may not call store.getState() while the reducer is executing. The reducer has already received the state as an argument. Pass it down from the top reducer instead of reading it from the store.");
-            return c
-        }
-
-        function m(e) {
-            if ("function" != typeof e) throw new Error("Expected the listener to be a function.");
-            if (d) throw new Error("You may not call store.subscribe() while the reducer is executing. If you would like to be notified after the store has been updated, subscribe from a component and invoke store.getState() in the callback to access the latest state. See https://redux.js.org/api-reference/store#subscribe(listener) for more details.");
-            var t = !0;
-            return p(), f.push(e),
-                function() {
-                    if (t) {
-                        if (d) throw new Error("You may not unsubscribe from a store listener while the reducer is executing. See https://redux.js.org/api-reference/store#subscribe(listener) for more details.");
-                        t = !1, p();
-                        var n = f.indexOf(e);
-                        f.splice(n, 1)
-                    }
-                }
-        }
-
-        function y(e) {
-            if (!a(e)) throw new Error("Actions must be plain objects. Use custom middleware for async actions.");
-            if (void 0 === e.type) throw new Error('Actions may not have an undefined "type" property. Have you misspelled a constant?');
-            if (d) throw new Error("Reducers may not dispatch actions.");
-            try {
-                d = !0, c = u(c, e)
-            } finally {
-                d = !1
-            }
-            for (var t = s = f, n = 0; n < t.length; n++) {
-                (0, t[n])()
-            }
-            return e
-        }
-
-        function v(e) {
-            if ("function" != typeof e) throw new Error("Expected the nextReducer to be a function.");
-            u = e, y({
-                type: i.REPLACE
-            })
-        }
-
-        function b() {
-            var e, t = m;
-            return (e = {
-                subscribe: function(e) {
-                    if ("object" != typeof e || null === e) throw new TypeError("Expected the observer to be an object.");
-
-                    function n() {
-                        e.next && e.next(h())
-                    }
-                    return n(), {
-                        unsubscribe: t(n)
-                    }
-                }
-            })[r.a] = function() {
-                return this
-            }, e
-        }
-        return y({
-            type: i.INIT
-        }), (o = {
-            dispatch: y,
-            subscribe: m,
-            getState: h,
-            replaceReducer: v
-        })[r.a] = b, o
-    }
-
-    function u(e, t) {
-        var n = t && t.type;
-        return "Given " + (n && 'action "' + String(n) + '"' || "an action") + ', reducer "' + e + '" returned undefined. To ignore an action, you must explicitly return the previous state. If you want this reducer to hold no value, you can return null instead of undefined.'
-    }
-
-    function c(e) {
-        for (var t = Object.keys(e), n = {}, r = 0; r < t.length; r++) {
-            var o = t[r];
-            0, "function" == typeof e[o] && (n[o] = e[o])
-        }
-        var a, l = Object.keys(n);
-        try {
-            ! function(e) {
-                Object.keys(e).forEach((function(t) {
-                    var n = e[t];
-                    if (void 0 === n(void 0, {
-                            type: i.INIT
-                        })) throw new Error('Reducer "' + t + "\" returned undefined during initialization. If the state passed to the reducer is undefined, you must explicitly return the initial state. The initial state may not be undefined. If you don't want to set a value for this reducer, you can use null instead of undefined.");
-                    if (void 0 === n(void 0, {
-                            type: i.PROBE_UNKNOWN_ACTION()
-                        })) throw new Error('Reducer "' + t + "\" returned undefined when probed with a random type. Don't try to handle " + i.INIT + ' or other actions in "redux/*" namespace. They are considered private. Instead, you must return the current state for any unknown actions, unless it is undefined, in which case you must return the initial state, regardless of the action type. The initial state may not be undefined, but can be null.')
-                }))
-            }(n)
-        } catch (e) {
-            a = e
-        }
-        return function(e, t) {
-            if (void 0 === e && (e = {}), a) throw a;
-            for (var r = !1, o = {}, i = 0; i < l.length; i++) {
-                var c = l[i],
-                    s = n[c],
-                    f = e[c],
-                    d = s(f, t);
-                if (void 0 === d) {
-                    var p = u(c, t);
-                    throw new Error(p)
-                }
-                o[c] = d, r = r || d !== f
-            }
-            return r ? o : e
-        }
-    }
-
-    function s(e, t) {
-        return function() {
-            return t(e.apply(this, arguments))
-        }
-    }
-
-    function f(e, t) {
-        if ("function" == typeof e) return s(e, t);
-        if ("object" != typeof e || null === e) throw new Error("bindActionCreators expected an object or a function, instead received " + (null === e ? "null" : typeof e) + '. Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?');
-        var n = {};
-        for (var r in e) {
-            var o = e[r];
-            "function" == typeof o && (n[r] = s(o, t))
-        }
-        return n
-    }
-}, function(e, t, n) {
-    "use strict";
     (function(e) {
         n.d(t, "a", (function() {
             return g
@@ -568,6 +395,179 @@
     }).call(this, n(4))
 }, function(e, t, n) {
     "use strict";
+    n.d(t, "a", (function() {
+        return f
+    })), n.d(t, "b", (function() {
+        return c
+    })), n.d(t, "c", (function() {
+        return l
+    }));
+    var r = n(5),
+        o = function() {
+            return Math.random().toString(36).substring(7).split("").join(".")
+        },
+        i = {
+            INIT: "@@redux/INIT" + o(),
+            REPLACE: "@@redux/REPLACE" + o(),
+            PROBE_UNKNOWN_ACTION: function() {
+                return "@@redux/PROBE_UNKNOWN_ACTION" + o()
+            }
+        };
+
+    function a(e) {
+        if ("object" != typeof e || null === e) return !1;
+        for (var t = e; null !== Object.getPrototypeOf(t);) t = Object.getPrototypeOf(t);
+        return Object.getPrototypeOf(e) === t
+    }
+
+    function l(e, t, n) {
+        var o;
+        if ("function" == typeof t && "function" == typeof n || "function" == typeof n && "function" == typeof arguments[3]) throw new Error("It looks like you are passing several store enhancers to createStore(). This is not supported. Instead, compose them together to a single function.");
+        if ("function" == typeof t && void 0 === n && (n = t, t = void 0), void 0 !== n) {
+            if ("function" != typeof n) throw new Error("Expected the enhancer to be a function.");
+            return n(l)(e, t)
+        }
+        if ("function" != typeof e) throw new Error("Expected the reducer to be a function.");
+        var u = e,
+            c = t,
+            s = [],
+            f = s,
+            d = !1;
+
+        function p() {
+            f === s && (f = s.slice())
+        }
+
+        function h() {
+            if (d) throw new Error("You may not call store.getState() while the reducer is executing. The reducer has already received the state as an argument. Pass it down from the top reducer instead of reading it from the store.");
+            return c
+        }
+
+        function m(e) {
+            if ("function" != typeof e) throw new Error("Expected the listener to be a function.");
+            if (d) throw new Error("You may not call store.subscribe() while the reducer is executing. If you would like to be notified after the store has been updated, subscribe from a component and invoke store.getState() in the callback to access the latest state. See https://redux.js.org/api-reference/store#subscribe(listener) for more details.");
+            var t = !0;
+            return p(), f.push(e),
+                function() {
+                    if (t) {
+                        if (d) throw new Error("You may not unsubscribe from a store listener while the reducer is executing. See https://redux.js.org/api-reference/store#subscribe(listener) for more details.");
+                        t = !1, p();
+                        var n = f.indexOf(e);
+                        f.splice(n, 1)
+                    }
+                }
+        }
+
+        function y(e) {
+            if (!a(e)) throw new Error("Actions must be plain objects. Use custom middleware for async actions.");
+            if (void 0 === e.type) throw new Error('Actions may not have an undefined "type" property. Have you misspelled a constant?');
+            if (d) throw new Error("Reducers may not dispatch actions.");
+            try {
+                d = !0, c = u(c, e)
+            } finally {
+                d = !1
+            }
+            for (var t = s = f, n = 0; n < t.length; n++) {
+                (0, t[n])()
+            }
+            return e
+        }
+
+        function v(e) {
+            if ("function" != typeof e) throw new Error("Expected the nextReducer to be a function.");
+            u = e, y({
+                type: i.REPLACE
+            })
+        }
+
+        function b() {
+            var e, t = m;
+            return (e = {
+                subscribe: function(e) {
+                    if ("object" != typeof e || null === e) throw new TypeError("Expected the observer to be an object.");
+
+                    function n() {
+                        e.next && e.next(h())
+                    }
+                    return n(), {
+                        unsubscribe: t(n)
+                    }
+                }
+            })[r.a] = function() {
+                return this
+            }, e
+        }
+        return y({
+            type: i.INIT
+        }), (o = {
+            dispatch: y,
+            subscribe: m,
+            getState: h,
+            replaceReducer: v
+        })[r.a] = b, o
+    }
+
+    function u(e, t) {
+        var n = t && t.type;
+        return "Given " + (n && 'action "' + String(n) + '"' || "an action") + ', reducer "' + e + '" returned undefined. To ignore an action, you must explicitly return the previous state. If you want this reducer to hold no value, you can return null instead of undefined.'
+    }
+
+    function c(e) {
+        for (var t = Object.keys(e), n = {}, r = 0; r < t.length; r++) {
+            var o = t[r];
+            0, "function" == typeof e[o] && (n[o] = e[o])
+        }
+        var a, l = Object.keys(n);
+        try {
+            ! function(e) {
+                Object.keys(e).forEach((function(t) {
+                    var n = e[t];
+                    if (void 0 === n(void 0, {
+                            type: i.INIT
+                        })) throw new Error('Reducer "' + t + "\" returned undefined during initialization. If the state passed to the reducer is undefined, you must explicitly return the initial state. The initial state may not be undefined. If you don't want to set a value for this reducer, you can use null instead of undefined.");
+                    if (void 0 === n(void 0, {
+                            type: i.PROBE_UNKNOWN_ACTION()
+                        })) throw new Error('Reducer "' + t + "\" returned undefined when probed with a random type. Don't try to handle " + i.INIT + ' or other actions in "redux/*" namespace. They are considered private. Instead, you must return the current state for any unknown actions, unless it is undefined, in which case you must return the initial state, regardless of the action type. The initial state may not be undefined, but can be null.')
+                }))
+            }(n)
+        } catch (e) {
+            a = e
+        }
+        return function(e, t) {
+            if (void 0 === e && (e = {}), a) throw a;
+            for (var r = !1, o = {}, i = 0; i < l.length; i++) {
+                var c = l[i],
+                    s = n[c],
+                    f = e[c],
+                    d = s(f, t);
+                if (void 0 === d) {
+                    var p = u(c, t);
+                    throw new Error(p)
+                }
+                o[c] = d, r = r || d !== f
+            }
+            return r ? o : e
+        }
+    }
+
+    function s(e, t) {
+        return function() {
+            return t(e.apply(this, arguments))
+        }
+    }
+
+    function f(e, t) {
+        if ("function" == typeof e) return s(e, t);
+        if ("object" != typeof e || null === e) throw new Error("bindActionCreators expected an object or a function, instead received " + (null === e ? "null" : typeof e) + '. Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?');
+        var n = {};
+        for (var r in e) {
+            var o = e[r];
+            "function" == typeof o && (n[r] = s(o, t))
+        }
+        return n
+    }
+}, function(e, t, n) {
+    "use strict";
     ! function e() {
         if ("undefined" != typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" == typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE) {
             0;
@@ -703,9 +703,9 @@
         g = n.n(b),
         w = n(26),
         E = [],
-        k = [null, null];
+        x = [null, null];
 
-    function x(e, t) {
+    function k(e, t) {
         var n = e[1];
         return [t.payload, n + 1]
     }
@@ -780,7 +780,7 @@
                         }(C)
                     }), [C]),
                     O = Object(r.useMemo)((function() {
-                        if (!y) return k;
+                        if (!y) return x;
                         var e = new f(C, b ? null : v.subscription),
                             t = e.notifyNestedSubs.bind(e);
                         return [e, t]
@@ -792,7 +792,7 @@
                             subscription: N
                         })
                     }), [b, v, N]),
-                    j = Object(r.useReducer)(x, E, T),
+                    j = Object(r.useReducer)(k, E, T),
                     R = j[0][0],
                     I = j[1];
                 if (R && R.error) throw R.error;
@@ -871,7 +871,7 @@
             if (!C.call(t, n[o]) || !P(e[n[o]], t[n[o]])) return !1;
         return !0
     }
-    var N = n(6);
+    var N = n(7);
 
     function M(e) {
         return function(t, n) {
@@ -1863,7 +1863,7 @@
             }()
         }
         n.d(t, "a", (function() {
-            return ke
+            return xe
         })), n.d(t, "b", (function() {
             return ge
         })), n.d(t, "c", (function() {
@@ -1922,7 +1922,7 @@
                 null != o && (E[r] = o)
             }))
         }
-        var k = l({}, {
+        var x = l({}, {
             familyPrefix: "fa",
             replacementClass: "svg-inline--fa",
             autoReplaceSvg: !0,
@@ -1935,9 +1935,9 @@
             measurePerformance: !1,
             showMissingIcons: !0
         }, E);
-        k.autoReplaceSvg || (k.observeMutations = !1);
-        var x = l({}, k);
-        m.FontAwesomeConfig = x;
+        x.autoReplaceSvg || (x.observeMutations = !1);
+        var k = l({}, x);
+        m.FontAwesomeConfig = k;
         var T = m || {};
         T.___FONT_AWESOME___ || (T.___FONT_AWESOME___ = {}), T.___FONT_AWESOME___.styles || (T.___FONT_AWESOME___.styles = {}), T.___FONT_AWESOME___.hooks || (T.___FONT_AWESOME___.hooks = {}), T.___FONT_AWESOME___.shims || (T.___FONT_AWESOME___.shims = []);
         var S = T.___FONT_AWESOME___,
@@ -2172,7 +2172,7 @@
                 h = p.width,
                 m = p.height,
                 y = "fa-w-".concat(Math.ceil(h / m * 16)),
-                v = [x.replacementClass, i ? "".concat(x.familyPrefix, "-").concat(i) : "", y].filter((function(e) {
+                v = [k.replacementClass, i ? "".concat(k.familyPrefix, "-").concat(i) : "", y].filter((function(e) {
                     return -1 === s.classes.indexOf(e)
                 })).concat(s.classes).join(" "),
                 b = {
@@ -2301,8 +2301,8 @@
                     }
                 }(g),
                 E = w.children,
-                k = w.attributes;
-            return g.children = E, g.attributes = k, u ? function(e) {
+                x = w.attributes;
+            return g.children = E, g.attributes = x, u ? function(e) {
                 var t = e.prefix,
                     n = e.iconName,
                     r = e.children,
@@ -2316,7 +2316,7 @@
                     children: [{
                         tag: "symbol",
                         attributes: l({}, o, {
-                            id: !0 === i ? "".concat(t, "-").concat(x.familyPrefix, "-").concat(n) : i
+                            id: !0 === i ? "".concat(t, "-").concat(k.familyPrefix, "-").concat(n) : i
                         }),
                         children: r
                     }]
@@ -2345,7 +2345,7 @@
             }(g)
         }
         var J = function() {},
-            ee = (x.measurePerformance && v && v.mark && v.measure, function(e, t, n, r) {
+            ee = (k.measurePerformance && v && v.mark && v.measure, function(e, t, n, r) {
                 var o, i, a, l = Object.keys(e),
                     u = l.length,
                     c = void 0 !== r ? function(e, t) {
@@ -2504,8 +2504,8 @@
 
         function pe() {
             var e = "svg-inline--fa",
-                t = x.familyPrefix,
-                n = x.replacementClass,
+                t = k.familyPrefix,
+                n = k.replacementClass,
                 r = 'svg:not(:root).svg-inline--fa {\n  overflow: visible;\n}\n\n.svg-inline--fa {\n  display: inline-block;\n  font-size: inherit;\n  height: 1em;\n  overflow: visible;\n  vertical-align: -0.125em;\n}\n.svg-inline--fa.fa-lg {\n  vertical-align: -0.225em;\n}\n.svg-inline--fa.fa-w-1 {\n  width: 0.0625em;\n}\n.svg-inline--fa.fa-w-2 {\n  width: 0.125em;\n}\n.svg-inline--fa.fa-w-3 {\n  width: 0.1875em;\n}\n.svg-inline--fa.fa-w-4 {\n  width: 0.25em;\n}\n.svg-inline--fa.fa-w-5 {\n  width: 0.3125em;\n}\n.svg-inline--fa.fa-w-6 {\n  width: 0.375em;\n}\n.svg-inline--fa.fa-w-7 {\n  width: 0.4375em;\n}\n.svg-inline--fa.fa-w-8 {\n  width: 0.5em;\n}\n.svg-inline--fa.fa-w-9 {\n  width: 0.5625em;\n}\n.svg-inline--fa.fa-w-10 {\n  width: 0.625em;\n}\n.svg-inline--fa.fa-w-11 {\n  width: 0.6875em;\n}\n.svg-inline--fa.fa-w-12 {\n  width: 0.75em;\n}\n.svg-inline--fa.fa-w-13 {\n  width: 0.8125em;\n}\n.svg-inline--fa.fa-w-14 {\n  width: 0.875em;\n}\n.svg-inline--fa.fa-w-15 {\n  width: 0.9375em;\n}\n.svg-inline--fa.fa-w-16 {\n  width: 1em;\n}\n.svg-inline--fa.fa-w-17 {\n  width: 1.0625em;\n}\n.svg-inline--fa.fa-w-18 {\n  width: 1.125em;\n}\n.svg-inline--fa.fa-w-19 {\n  width: 1.1875em;\n}\n.svg-inline--fa.fa-w-20 {\n  width: 1.25em;\n}\n.svg-inline--fa.fa-pull-left {\n  margin-right: 0.3em;\n  width: auto;\n}\n.svg-inline--fa.fa-pull-right {\n  margin-left: 0.3em;\n  width: auto;\n}\n.svg-inline--fa.fa-border {\n  height: 1.5em;\n}\n.svg-inline--fa.fa-li {\n  width: 2em;\n}\n.svg-inline--fa.fa-fw {\n  width: 1.25em;\n}\n\n.fa-layers svg.svg-inline--fa {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n\n.fa-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -0.125em;\n  width: 1em;\n}\n.fa-layers svg.svg-inline--fa {\n  -webkit-transform-origin: center center;\n          transform-origin: center center;\n}\n\n.fa-layers-counter, .fa-layers-text {\n  display: inline-block;\n  position: absolute;\n  text-align: center;\n}\n\n.fa-layers-text {\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  -webkit-transform-origin: center center;\n          transform-origin: center center;\n}\n\n.fa-layers-counter {\n  background-color: #ff253a;\n  border-radius: 1em;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  color: #fff;\n  height: 1.5em;\n  line-height: 1;\n  max-width: 5em;\n  min-width: 1.5em;\n  overflow: hidden;\n  padding: 0.25em;\n  right: 0;\n  text-overflow: ellipsis;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right;\n}\n\n.fa-layers-bottom-right {\n  bottom: 0;\n  right: 0;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom right;\n          transform-origin: bottom right;\n}\n\n.fa-layers-bottom-left {\n  bottom: 0;\n  left: 0;\n  right: auto;\n  top: auto;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: bottom left;\n          transform-origin: bottom left;\n}\n\n.fa-layers-top-right {\n  right: 0;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top right;\n          transform-origin: top right;\n}\n\n.fa-layers-top-left {\n  left: 0;\n  right: auto;\n  top: 0;\n  -webkit-transform: scale(0.25);\n          transform: scale(0.25);\n  -webkit-transform-origin: top left;\n          transform-origin: top left;\n}\n\n.fa-lg {\n  font-size: 1.3333333333em;\n  line-height: 0.75em;\n  vertical-align: -0.0667em;\n}\n\n.fa-xs {\n  font-size: 0.75em;\n}\n\n.fa-sm {\n  font-size: 0.875em;\n}\n\n.fa-1x {\n  font-size: 1em;\n}\n\n.fa-2x {\n  font-size: 2em;\n}\n\n.fa-3x {\n  font-size: 3em;\n}\n\n.fa-4x {\n  font-size: 4em;\n}\n\n.fa-5x {\n  font-size: 5em;\n}\n\n.fa-6x {\n  font-size: 6em;\n}\n\n.fa-7x {\n  font-size: 7em;\n}\n\n.fa-8x {\n  font-size: 8em;\n}\n\n.fa-9x {\n  font-size: 9em;\n}\n\n.fa-10x {\n  font-size: 10em;\n}\n\n.fa-fw {\n  text-align: center;\n  width: 1.25em;\n}\n\n.fa-ul {\n  list-style-type: none;\n  margin-left: 2.5em;\n  padding-left: 0;\n}\n.fa-ul > li {\n  position: relative;\n}\n\n.fa-li {\n  left: -2em;\n  position: absolute;\n  text-align: center;\n  width: 2em;\n  line-height: inherit;\n}\n\n.fa-border {\n  border: solid 0.08em #eee;\n  border-radius: 0.1em;\n  padding: 0.2em 0.25em 0.15em;\n}\n\n.fa-pull-left {\n  float: left;\n}\n\n.fa-pull-right {\n  float: right;\n}\n\n.fa.fa-pull-left,\n.fas.fa-pull-left,\n.far.fa-pull-left,\n.fal.fa-pull-left,\n.fab.fa-pull-left {\n  margin-right: 0.3em;\n}\n.fa.fa-pull-right,\n.fas.fa-pull-right,\n.far.fa-pull-right,\n.fal.fa-pull-right,\n.fab.fa-pull-right {\n  margin-left: 0.3em;\n}\n\n.fa-spin {\n  -webkit-animation: fa-spin 2s infinite linear;\n          animation: fa-spin 2s infinite linear;\n}\n\n.fa-pulse {\n  -webkit-animation: fa-spin 1s infinite steps(8);\n          animation: fa-spin 1s infinite steps(8);\n}\n\n@-webkit-keyframes fa-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n\n@keyframes fa-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n.fa-rotate-90 {\n  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg);\n}\n\n.fa-rotate-180 {\n  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";\n  -webkit-transform: rotate(180deg);\n          transform: rotate(180deg);\n}\n\n.fa-rotate-270 {\n  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg);\n}\n\n.fa-flip-horizontal {\n  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";\n  -webkit-transform: scale(-1, 1);\n          transform: scale(-1, 1);\n}\n\n.fa-flip-vertical {\n  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";\n  -webkit-transform: scale(1, -1);\n          transform: scale(1, -1);\n}\n\n.fa-flip-both, .fa-flip-horizontal.fa-flip-vertical {\n  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";\n  -webkit-transform: scale(-1, -1);\n          transform: scale(-1, -1);\n}\n\n:root .fa-rotate-90,\n:root .fa-rotate-180,\n:root .fa-rotate-270,\n:root .fa-flip-horizontal,\n:root .fa-flip-vertical,\n:root .fa-flip-both {\n  -webkit-filter: none;\n          filter: none;\n}\n\n.fa-stack {\n  display: inline-block;\n  height: 2em;\n  position: relative;\n  width: 2.5em;\n}\n\n.fa-stack-1x,\n.fa-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n\n.svg-inline--fa.fa-stack-1x {\n  height: 1em;\n  width: 1.25em;\n}\n.svg-inline--fa.fa-stack-2x {\n  height: 2em;\n  width: 2.5em;\n}\n\n.fa-inverse {\n  color: #fff;\n}\n\n.sr-only {\n  border: 0;\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n.sr-only-focusable:active, .sr-only-focusable:focus {\n  clip: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  position: static;\n  width: auto;\n}';
             if ("fa" !== t || n !== e) {
                 var o = new RegExp("\\.".concat("fa", "\\-"), "g"),
@@ -2531,7 +2531,7 @@
         }
 
         function me() {
-            x.autoAddCss && !we && (V(pe()), we = !0)
+            k.autoAddCss && !we && (V(pe()), we = !0)
         }
 
         function ye(e, t) {
@@ -2602,7 +2602,7 @@
                     return le(e)
                 }
             },
-            ke = (be = function(e) {
+            xe = (be = function(e) {
                 var t = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
                     n = t.transform,
                     r = void 0 === n ? B : n,
@@ -2625,7 +2625,7 @@
                     return ye(l({
                         type: "icon"
                     }, e), (function() {
-                        return me(), x.autoA11y && (s ? h["aria-labelledby"] = "".concat(x.replacementClass, "-title-").concat(q()) : (h["aria-hidden"] = "true", h.focusable = "false")), Z({
+                        return me(), k.autoA11y && (s ? h["aria-labelledby"] = "".concat(k.replacementClass, "-title-").concat(q()) : (h["aria-hidden"] = "true", h.focusable = "false")), Z({
                             icons: {
                                 main: he(g),
                                 mask: u ? he(u.icon) : {
@@ -2735,8 +2735,8 @@
     function E(e, t, n, r, o, i, a, l, u) {
         y = !1, v = null, m.apply(w, arguments)
     }
-    var k = null,
-        x = null,
+    var x = null,
+        k = null,
         T = null;
 
     function S(e, t, n) {
@@ -2799,7 +2799,7 @@
     function z(e, t) {
         var n = e.stateNode;
         if (!n) return null;
-        var r = k(n);
+        var r = x(n);
         if (!r) return null;
         n = r[t];
         e: switch (t) {
@@ -3039,9 +3039,9 @@
                 dependencies: "blur compositionupdate keydown keypress keyup mousedown".split(" ")
             }
         },
-        ke = !1;
+        xe = !1;
 
-    function xe(e, t) {
+    function ke(e, t) {
         switch (e) {
             case "keyup":
                 return -1 !== me.indexOf(t.keyCode);
@@ -3079,20 +3079,20 @@
                     }
                     o = void 0
                 }
-                else Se ? xe(e, n) && (o = Ee.compositionEnd) : "keydown" === e && 229 === n.keyCode && (o = Ee.compositionStart);
+                else Se ? ke(e, n) && (o = Ee.compositionEnd) : "keydown" === e && 229 === n.keyCode && (o = Ee.compositionStart);
                 return o ? (ge && "ko" !== n.locale && (Se || o !== Ee.compositionStart ? o === Ee.compositionEnd && Se && (i = ae()) : (oe = "value" in (re = r) ? re.value : re.textContent, Se = !0)), o = pe.getPooled(o, t, n, r), i ? o.data = i : null !== (i = Te(n)) && (o.data = i), V(o), i = o) : i = null, (e = be ? function(e, t) {
                     switch (e) {
                         case "compositionend":
                             return Te(t);
                         case "keypress":
-                            return 32 !== t.which ? null : (ke = !0, we);
+                            return 32 !== t.which ? null : (xe = !0, we);
                         case "textInput":
-                            return (e = t.data) === we && ke ? null : e;
+                            return (e = t.data) === we && xe ? null : e;
                         default:
                             return null
                     }
                 }(e, n) : function(e, t) {
-                    if (Se) return "compositionend" === e || !ye && xe(e, t) ? (e = ae(), ie = oe = re = null, Se = !1, e) : null;
+                    if (Se) return "compositionend" === e || !ye && ke(e, t) ? (e = ae(), ie = oe = re = null, Se = !1, e) : null;
                     switch (e) {
                         case "paste":
                             return null;
@@ -3115,9 +3115,9 @@
         Oe = null;
 
     function Ne(e) {
-        if (e = x(e)) {
+        if (e = k(e)) {
             if ("function" != typeof Ce) throw a(Error(280));
-            var t = k(e.stateNode);
+            var t = x(e.stateNode);
             Ce(e.stateNode, e.type, t)
         }
     }
@@ -3399,7 +3399,7 @@
         }
     }
 
-    function kt(e, t) {
+    function xt(e, t) {
         var n = t.checked;
         return o({}, t, {
             defaultChecked: void 0,
@@ -3409,7 +3409,7 @@
         })
     }
 
-    function xt(e, t) {
+    function kt(e, t) {
         var n = null == t.defaultValue ? "" : t.defaultValue,
             r = null != t.checked ? t.checked : t.defaultChecked;
         n = Et(null != t.value ? t.value : n), e._wrapperState = {
@@ -3953,8 +3953,8 @@
             ["timeupdate", "timeUpdate", 2],
             [te, "transitionEnd", 2],
             ["waiting", "waiting", 2]
-        ], En = {}, kn = {}, xn = 0; xn < wn.length; xn++) {
-        var Tn = wn[xn],
+        ], En = {}, xn = {}, kn = 0; kn < wn.length; kn++) {
+        var Tn = wn[kn],
             Sn = Tn[0],
             _n = Tn[1],
             Cn = Tn[2],
@@ -3967,15 +3967,15 @@
                 dependencies: [Sn],
                 eventPriority: Cn
             };
-        En[_n] = On, kn[Sn] = On
+        En[_n] = On, xn[Sn] = On
     }
     var Nn = {
             eventTypes: En,
             getEventPriority: function(e) {
-                return void 0 !== (e = kn[e]) ? e.eventPriority : 2
+                return void 0 !== (e = xn[e]) ? e.eventPriority : 2
             },
             extractEvents: function(e, t, n, r) {
-                var o = kn[e];
+                var o = xn[e];
                 if (!o) return null;
                 switch (e) {
                     case "keypress":
@@ -4332,7 +4332,7 @@
         var t = e.textContent;
         t === e._wrapperState.initialValue && (e.value = t)
     }
-    M.injectEventPluginOrder("ResponderEventPlugin SimpleEventPlugin EnterLeaveEventPlugin ChangeEventPlugin SelectEventPlugin BeforeInputEventPlugin".split(" ")), k = L, x = D, T = F, M.injectEventPluginsByName({
+    M.injectEventPluginOrder("ResponderEventPlugin SimpleEventPlugin EnterLeaveEventPlugin ChangeEventPlugin SelectEventPlugin BeforeInputEventPlugin".split(" ")), x = L, k = D, T = F, M.injectEventPluginsByName({
         SimpleEventPlugin: Nn,
         EnterLeaveEventPlugin: en,
         ChangeEventPlugin: Wt,
@@ -4519,8 +4519,8 @@
         }
     }
 
-    function kr() {}
-    var xr = null,
+    function xr() {}
+    var kr = null,
         Tr = null;
 
     function Sr(e, t) {
@@ -4718,12 +4718,12 @@
     var Eo = {
             current: null
         },
-        ko = null,
         xo = null,
+        ko = null,
         To = null;
 
     function So() {
-        To = xo = ko = null
+        To = ko = xo = null
     }
 
     function _o(e, t) {
@@ -4749,7 +4749,7 @@
     }
 
     function Oo(e, t) {
-        ko = e, To = xo = null, null !== (e = e.dependencies) && null !== e.firstContext && (e.expirationTime >= t && (ta = !0), e.firstContext = null)
+        xo = e, To = ko = null, null !== (e = e.dependencies) && null !== e.firstContext && (e.expirationTime >= t && (ta = !0), e.firstContext = null)
     }
 
     function No(e, t) {
@@ -4758,14 +4758,14 @@
                     context: e,
                     observedBits: t,
                     next: null
-                }, null === xo) {
-                if (null === ko) throw a(Error(308));
-                xo = t, ko.dependencies = {
+                }, null === ko) {
+                if (null === xo) throw a(Error(308));
+                ko = t, xo.dependencies = {
                     expirationTime: 0,
                     firstContext: t,
                     responders: null
                 }
-            } else xo = xo.next = t;
+            } else ko = ko.next = t;
         return e._currentValue
     }
     var Mo = !1;
@@ -5220,8 +5220,8 @@
         gi = null,
         wi = null,
         Ei = null,
-        ki = 0,
-        xi = null,
+        xi = 0,
+        ki = null,
         Ti = 0,
         Si = !1,
         _i = null,
@@ -5241,16 +5241,16 @@
     function Ni(e, t, n, r, o, i) {
         if (mi = i, yi = t, bi = null !== e ? e.memoizedState : null, hi.current = null === bi ? $i : Bi, t = n(r, o), Si) {
             do {
-                Si = !1, Ci += 1, bi = null !== e ? e.memoizedState : null, Ei = gi, xi = wi = vi = null, hi.current = Bi, t = n(r, o)
+                Si = !1, Ci += 1, bi = null !== e ? e.memoizedState : null, Ei = gi, ki = wi = vi = null, hi.current = Bi, t = n(r, o)
             } while (Si);
             _i = null, Ci = 0
         }
-        if (hi.current = Wi, (e = yi).memoizedState = gi, e.expirationTime = ki, e.updateQueue = xi, e.effectTag |= Ti, e = null !== vi && null !== vi.next, mi = 0, Ei = wi = gi = bi = vi = yi = null, ki = 0, xi = null, Ti = 0, e) throw a(Error(300));
+        if (hi.current = Wi, (e = yi).memoizedState = gi, e.expirationTime = xi, e.updateQueue = ki, e.effectTag |= Ti, e = null !== vi && null !== vi.next, mi = 0, Ei = wi = gi = bi = vi = yi = null, xi = 0, ki = null, Ti = 0, e) throw a(Error(300));
         return t
     }
 
     function Mi() {
-        hi.current = Wi, mi = 0, Ei = wi = gi = bi = vi = yi = null, ki = 0, xi = null, Ti = 0, Si = !1, _i = null, Ci = 0
+        hi.current = Wi, mi = 0, Ei = wi = gi = bi = vi = yi = null, xi = 0, ki = null, Ti = 0, Si = !1, _i = null, Ci = 0
     }
 
     function zi() {
@@ -5311,7 +5311,7 @@
                 s = !1;
             do {
                 var f = c.expirationTime;
-                f < mi ? (s || (s = !0, u = l, o = i), f > ki && (ki = f)) : (El(f, c.suspenseConfig), i = c.eagerReducer === e ? c.eagerState : e(i, c.action)), l = c, c = c.next
+                f < mi ? (s || (s = !0, u = l, o = i), f > xi && (xi = f)) : (El(f, c.suspenseConfig), i = c.eagerReducer === e ? c.eagerState : e(i, c.action)), l = c, c = c.next
             } while (null !== c && c !== r);
             s || (u = l, o = i), tn(i, t.memoizedState) || (ta = !0), t.memoizedState = i, t.baseUpdate = u, t.baseState = o, n.lastRenderedState = i
         }
@@ -5325,9 +5325,9 @@
             destroy: n,
             deps: r,
             next: null
-        }, null === xi ? (xi = {
+        }, null === ki ? (ki = {
             lastEffect: null
-        }).lastEffect = e.next = e : null === (t = xi.lastEffect) ? xi.lastEffect = e.next = e : (n = t.next, t.next = e, e.next = n, xi.lastEffect = e), e
+        }).lastEffect = e.next = e : null === (t = ki.lastEffect) ? ki.lastEffect = e.next = e : (n = t.next, t.next = e, e.next = n, ki.lastEffect = e), e
     }
 
     function Di(e, t, n, r) {
@@ -5764,7 +5764,7 @@
         }
     }
 
-    function ka(e, t) {
+    function xa(e, t) {
         return {
             value: e,
             source: t,
@@ -5792,7 +5792,7 @@
             var l = t.stateNode;
             switch (li(oi.current), e = null, n) {
                 case "input":
-                    a = kt(l, a), r = kt(l, r), e = [];
+                    a = xt(l, a), r = xt(l, r), e = [];
                     break;
                 case "option":
                     a = tr(l, a), r = tr(l, r), e = [];
@@ -5808,7 +5808,7 @@
                     a = rr(l, a), r = rr(l, r), e = [];
                     break;
                 default:
-                    "function" != typeof a.onClick && "function" == typeof r.onClick && (l.onclick = kr)
+                    "function" != typeof a.onClick && "function" == typeof r.onClick && (l.onclick = xr)
             }
             gr(n, r), l = n = void 0;
             var u = null;
@@ -5833,7 +5833,7 @@
     }, ga = function(e, t, n, r) {
         n !== r && ya(t)
     };
-    var xa = "function" == typeof WeakSet ? WeakSet : Set;
+    var ka = "function" == typeof WeakSet ? WeakSet : Set;
 
     function Ta(e, t) {
         var n = t.source,
@@ -5980,7 +5980,7 @@
                         var u = l;
                         l = n, 8 === (i = t).nodeType ? i.parentNode.insertBefore(u, l) : i.insertBefore(u, l)
                     } else t.insertBefore(l, n);
-                else r ? (8 === (u = t).nodeType ? (i = u.parentNode).insertBefore(l, u) : (i = u).appendChild(l), null != (u = u._reactRootContainer) || null !== i.onclick || (i.onclick = kr)) : t.appendChild(l)
+                else r ? (8 === (u = t).nodeType ? (i = u.parentNode).insertBefore(l, u) : (i = u).appendChild(l), null != (u = u._reactRootContainer) || null !== i.onclick || (i.onclick = xr)) : t.appendChild(l)
             } else if (4 !== o.tag && null !== o.child) {
                 o.child.return = o, o = o.child;
                 continue
@@ -6120,7 +6120,7 @@
         if (null !== t) {
             e.updateQueue = null;
             var n = e.stateNode;
-            null === n && (n = e.stateNode = new xa), t.forEach((function(t) {
+            null === n && (n = e.stateNode = new ka), t.forEach((function(t) {
                 var r = Ml.bind(null, e, t);
                 n.has(t) || (n.add(t), t.then(r, r))
             }))
@@ -6360,9 +6360,9 @@
             } else ll = 0;
             for (;;) try {
                 if (n)
-                    for (; null !== Wa;) Wa = kl(Wa);
+                    for (; null !== Wa;) Wa = xl(Wa);
                 else
-                    for (; null !== Wa && !Kr();) Wa = kl(Wa);
+                    for (; null !== Wa && !Kr();) Wa = xl(Wa);
                 break
             } catch (n) {
                 if (So(), Mi(), null === (i = Wa) || null === i.return) throw gl(e, t), Ua = r, n;
@@ -6391,7 +6391,7 @@
                         s = Error((st(c.type) || "A React component") + " suspended while rendering, but no fallback UI was specified.\n\nAdd a <Suspense fallback=...> component higher in the tree to provide a loading indicator or placeholder to display." + ft(c))
                     }
                     4 !== Ba && (Ba = 1),
-                    s = ka(s, c),
+                    s = xa(s, c),
                     c = u;do {
                         switch (c.tag) {
                             case 3:
@@ -6406,7 +6406,7 @@
                         c = c.return
                     } while (null !== c)
                 }
-                Wa = xl(i)
+                Wa = kl(i)
             }
             if (Ua = r, So(), Fa.current = o, null !== Wa) return wl.bind(null, e, t)
         }
@@ -6441,12 +6441,12 @@
         e < Va && 1 < e && (Va = e), null !== t && e < qa && 1 < e && (qa = e, Ya = t)
     }
 
-    function kl(e) {
+    function xl(e) {
         var t = zl(e.alternate, e, $a);
-        return e.memoizedProps = e.pendingProps, null === t && (t = xl(e)), La.current = null, t
+        return e.memoizedProps = e.pendingProps, null === t && (t = kl(e)), La.current = null, t
     }
 
-    function xl(e) {
+    function kl(e) {
         Wa = e;
         do {
             var t = Wa.alternate;
@@ -6503,7 +6503,7 @@
                                             Rn("toggle", l);
                                             break;
                                         case "input":
-                                            xt(l, s), Rn("invalid", l), Er(r, "onChange");
+                                            kt(l, s), Rn("invalid", l), Er(r, "onChange");
                                             break;
                                         case "select":
                                             l._wrapperState = {
@@ -6525,7 +6525,7 @@
                                         case "option":
                                             break;
                                         default:
-                                            "function" == typeof s.onClick && (l.onclick = kr)
+                                            "function" == typeof s.onClick && (l.onclick = xr)
                                     }
                                     r = f, n.updateQueue = r, null !== r && ya(t)
                                 } else {
@@ -6560,7 +6560,7 @@
                                             Rn("toggle", c), r = i;
                                             break;
                                         case "input":
-                                            xt(c, i), r = kt(c, i), Rn("invalid", c), Er(d, "onChange");
+                                            kt(c, i), r = xt(c, i), Rn("invalid", c), Er(d, "onChange");
                                             break;
                                         case "option":
                                             r = tr(c, i);
@@ -6598,7 +6598,7 @@
                                             r = c, c = i, r.multiple = !!c.multiple, null != (s = c.value) ? nr(r, !!c.multiple, s, !1) : null != c.defaultValue && nr(r, !!c.multiple, c.defaultValue, !0);
                                             break;
                                         default:
-                                            "function" == typeof r.onClick && (c.onclick = kr)
+                                            "function" == typeof r.onClick && (c.onclick = xr)
                                     }
                                     Sr(l, i) && ya(t), t.stateNode = n
                                 }
@@ -6711,7 +6711,7 @@
         var o = n.expirationTime,
             i = n.childExpirationTime;
         if (o = i > o ? i : o, e.firstPendingTime = o, o < e.lastPendingTime && (e.lastPendingTime = o), e === Ha && (Wa = Ha = null, $a = 0), 1 < n.effectTag ? null !== n.lastEffect ? (n.lastEffect.nextEffect = n, o = n.firstEffect) : o = n : o = n.firstEffect, null !== o) {
-            i = Ua, Ua |= 32, La.current = null, xr = An;
+            i = Ua, Ua |= 32, La.current = null, kr = An;
             var l = Vn();
             if (qn(l)) {
                 if ("selectionStart" in l) var u = {
@@ -6776,10 +6776,10 @@
                                 case 1:
                                     if (256 & l.effectTag && null !== w) {
                                         var E = w.memoizedProps,
-                                            k = w.memoizedState,
-                                            x = l.stateNode,
-                                            T = x.getSnapshotBeforeUpdate(l.elementType === l.type ? E : wo(l.type, E), k);
-                                        x.__reactInternalSnapshotBeforeUpdate = T
+                                            x = w.memoizedState,
+                                            k = l.stateNode,
+                                            T = k.getSnapshotBeforeUpdate(l.elementType === l.type ? E : wo(l.type, E), x);
+                                        k.__reactInternalSnapshotBeforeUpdate = T
                                     }
                                     break;
                                 case 3:
@@ -6836,7 +6836,7 @@
             if (C = Tr, _ = Vn(), S = C.focusedElem, w = C.selectionRange, _ !== S && S && S.ownerDocument && function e(t, n) {
                     return !(!t || !n) && (t === n || (!t || 3 !== t.nodeType) && (n && 3 === n.nodeType ? e(t, n.parentNode) : "contains" in t ? t.contains(n) : !!t.compareDocumentPosition && !!(16 & t.compareDocumentPosition(n))))
                 }(S.ownerDocument.documentElement, S)) {
-                null !== w && qn(S) && (_ = w.start, void 0 === (C = w.end) && (C = _), "selectionStart" in S ? (S.selectionStart = _, S.selectionEnd = Math.min(C, S.value.length)) : (C = (_ = S.ownerDocument || document) && _.defaultView || window).getSelection && (C = C.getSelection(), E = S.textContent.length, P = Math.min(w.start, E), w = void 0 === w.end ? P : Math.min(w.end, E), !C.extend && P > w && (E = w, w = P, P = E), E = Bn(S, P), k = Bn(S, w), E && k && (1 !== C.rangeCount || C.anchorNode !== E.node || C.anchorOffset !== E.offset || C.focusNode !== k.node || C.focusOffset !== k.offset) && ((_ = _.createRange()).setStart(E.node, E.offset), C.removeAllRanges(), P > w ? (C.addRange(_), C.extend(k.node, k.offset)) : (_.setEnd(k.node, k.offset), C.addRange(_))))), _ = [];
+                null !== w && qn(S) && (_ = w.start, void 0 === (C = w.end) && (C = _), "selectionStart" in S ? (S.selectionStart = _, S.selectionEnd = Math.min(C, S.value.length)) : (C = (_ = S.ownerDocument || document) && _.defaultView || window).getSelection && (C = C.getSelection(), E = S.textContent.length, P = Math.min(w.start, E), w = void 0 === w.end ? P : Math.min(w.end, E), !C.extend && P > w && (E = w, w = P, P = E), E = Bn(S, P), x = Bn(S, w), E && x && (1 !== C.rangeCount || C.anchorNode !== E.node || C.anchorOffset !== E.offset || C.focusNode !== x.node || C.focusOffset !== x.offset) && ((_ = _.createRange()).setStart(E.node, E.offset), C.removeAllRanges(), P > w ? (C.addRange(_), C.extend(x.node, x.offset)) : (_.setEnd(x.node, x.offset), C.addRange(_))))), _ = [];
                 for (C = S; C = C.parentNode;) 1 === C.nodeType && _.push({
                     element: C,
                     left: C.scrollLeft,
@@ -6844,7 +6844,7 @@
                 });
                 for ("function" == typeof S.focus && S.focus(), S = 0; S < _.length; S++)(C = _[S]).element.scrollLeft = C.left, C.element.scrollTop = C.top
             }
-            Tr = null, An = !!xr, xr = null, e.current = n, Xa = o;
+            Tr = null, An = !!kr, kr = null, e.current = n, Xa = o;
             do {
                 try {
                     for (S = r; null !== Xa;) {
@@ -6957,7 +6957,7 @@
     }
 
     function Pl(e, t, n) {
-        Io(e, t = Ra(e, t = ka(n, t), 1073741823)), null !== (e = dl(e, 1073741823)) && pl(e, 99, 1073741823)
+        Io(e, t = Ra(e, t = xa(n, t), 1073741823)), null !== (e = dl(e, 1073741823)) && pl(e, 99, 1073741823)
     }
 
     function Ol(e, t) {
@@ -6971,7 +6971,7 @@
                 if (1 === n.tag) {
                     var r = n.stateNode;
                     if ("function" == typeof n.type.getDerivedStateFromError || "function" == typeof r.componentDidCatch && (null === Ja || !Ja.has(r))) {
-                        Io(n, e = Ia(n, e = ka(t, e), 1073741823)), null !== (n = dl(n, 1073741823)) && pl(n, 99, 1073741823);
+                        Io(n, e = Ia(n, e = xa(t, e), 1073741823)), null !== (n = dl(n, 1073741823)) && pl(n, 99, 1073741823);
                         break
                     }
                 }
@@ -7639,9 +7639,9 @@
         this.props = e, this.context = t, this.refs = w, this.updater = n || g
     }
 
-    function k() {}
+    function x() {}
 
-    function x(e, t, n) {
+    function k(e, t, n) {
         this.props = e, this.context = t, this.refs = w, this.updater = n || g
     }
     E.prototype.isReactComponent = {}, E.prototype.setState = function(e, t) {
@@ -7649,9 +7649,9 @@
         this.updater.enqueueSetState(this, e, t, "setState")
     }, E.prototype.forceUpdate = function(e) {
         this.updater.enqueueForceUpdate(this, e, "forceUpdate")
-    }, k.prototype = E.prototype;
-    var T = x.prototype = new k;
-    T.constructor = x, r(T, E.prototype), T.isPureReactComponent = !0;
+    }, x.prototype = E.prototype;
+    var T = k.prototype = new x;
+    T.constructor = k, r(T, E.prototype), T.isPureReactComponent = !0;
     var S = {
             current: null
         },
@@ -7824,7 +7824,7 @@
                 }
             },
             Component: E,
-            PureComponent: x,
+            PureComponent: k,
             createContext: function(e, t) {
                 return void 0 === t && (t = null), (e = {
                     $$typeof: f,
@@ -8011,8 +8011,8 @@
             g = -1,
             w = -1,
             E = 33.33,
-            k = -1,
             x = -1,
+            k = -1,
             T = 0,
             S = !1;
         a = function() {
@@ -8035,7 +8035,7 @@
             P = C.port2;
         C.port1.onmessage = _;
         var O = function(e) {
-            if (null === b) x = k = -1, v = !1;
+            if (null === b) k = x = -1, v = !1;
             else {
                 v = !0, m((function(e) {
                     h(g), O(e)
@@ -8043,11 +8043,11 @@
                 var n = function() {
                     T = t.unstable_now() + E / 2, _(), g = p(n, 3 * E)
                 };
-                if (g = p(n, 3 * E), -1 !== k && .1 < e - k) {
-                    var r = e - k;
-                    !S && -1 !== x && r < E && x < E && (8.33 > (E = r < x ? x : r) && (E = 8.33)), x = r
+                if (g = p(n, 3 * E), -1 !== x && .1 < e - x) {
+                    var r = e - x;
+                    !S && -1 !== k && r < E && k < E && (8.33 > (E = r < k ? k : r) && (E = 8.33)), k = r
                 }
-                k = e, T = e + E, P.postMessage(null)
+                x = e, T = e + E, P.postMessage(null)
             }
         };
         r = function(e) {
@@ -9165,23 +9165,36 @@
         },
         m = {
             prefix: "fas",
+            iconName: "share",
+            icon: [512, 512, [], "f064", "M503.691 189.836L327.687 37.851C312.281 24.546 288 35.347 288 56.015v80.053C127.371 137.907 0 170.1 0 322.326c0 61.441 39.581 122.309 83.333 154.132 13.653 9.931 33.111-2.533 28.077-18.631C66.066 312.814 132.917 274.316 288 272.085V360c0 20.7 24.3 31.453 39.687 18.164l176.004-152c11.071-9.562 11.086-26.753 0-36.328z"]
+        },
+        y = {
+            prefix: "fas",
             iconName: "trash",
             icon: [448, 512, [], "f1f8", "M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"]
         },
-        y = n(3),
-        v = n(7);
-    class b extends i.Component {
+        v = n(3),
+        b = n(6);
+    class g extends i.Component {
         constructor(e) {
             super(e)
         }
         render() {
             return i.createElement("div", {
                 className: "search-wrapper"
-            })
+            }, i.createElement(b.a, {
+                icon: "search"
+            }), i.createElement("input", {
+                className: "search-input",
+                type: "text",
+                placeholder: "Search or Add Notes...",
+                value: this.props.search,
+                onChange: e => this.props.onChange(e.target.value)
+            }))
         }
     }
-    var g = b;
-    class w extends i.Component {
+    var w = g;
+    class E extends i.Component {
         constructor(e) {
             super(e), this.lineLength = 28, this.state = {
                 isDisplayingMore: !1
@@ -9203,18 +9216,22 @@
             }, i.createElement("button", {
                 className: "icon-trash",
                 onClick: e => this.props.onDelete()
-            }, i.createElement(v.a, {
+            }, i.createElement(b.a, {
                 icon: "trash"
             })), i.createElement("button", {
                 className: "icon-copy",
                 onClick: e => this.props.onCopy(),
                 "data-clipboard-text": this.props.text
-            }, i.createElement(v.a, {
+            }, i.createElement(b.a, {
                 icon: "copy"
+            })), i.createElement("button", {
+                className: "icon-share"
+            }, i.createElement(b.a, {
+                icon: "share"
             }))))
         }
     }
-    var E = w;
+    var x = E;
     class k extends i.Component {
         constructor(e) {
             super(e)
@@ -9245,11 +9262,11 @@
             }, this.props.confirmText))))))
         }
     }
-    var x = k,
-        T = (n(37), n(38));
-    class S extends i.Component {
+    var T = k,
+        S = (n(37), n(38));
+    class _ extends i.Component {
         constructor(e) {
-            super(e), new T(".icon-copy"), this.state = {
+            super(e), new S(".icon-copy"), this.state = {
                 search: "",
                 notification: "",
                 oldTimeout: -1,
@@ -9320,7 +9337,7 @@
                 style: {
                     textAlign: "center"
                 }
-            }, "Saved text snippits will appear here!")) : e.map((e, t) => i.createElement(E, {
+            }, "Saved text snippits will appear here!")) : e.map((e, t) => i.createElement(x, {
                 backgroundColor: this.props.backgroundColor,
                 key: t,
                 text: e,
@@ -9337,7 +9354,7 @@
                     notification: r,
                     undoText: o
                 } = this.state;
-            return i.createElement("div", null, this.state.hasModalOpen && i.createElement(x, {
+            return i.createElement("div", null, this.state.hasModalOpen && i.createElement(T, {
                 label: "Are you sure you want to delete all your notes? This action is irreversible.",
                 title: "Delete All Notes?",
                 confirmText: "Delete",
@@ -9362,33 +9379,33 @@
                     hasModalOpen: !0
                 }),
                 className: "eraser-button"
-            }, i.createElement(v.a, {
+            }, i.createElement(b.a, {
                 icon: "eraser"
             }))), this.mapClipboardToNotes(t)))
         }
     }
-    var _ = Object(o.b)(e => ({
+    var C = Object(o.b)(e => ({
         clipboard: e.clipboard,
         backgroundColor: e.options.backgroundColor,
         textColor: e.options.textColor,
         lineCount: e.options.lineCount
     }), e => ({
-        updateClipboard: t => e(Object(y.c)(t))
-    }))(S);
-    class C extends i.Component {
+        updateClipboard: t => e(Object(v.c)(t))
+    }))(_);
+    class P extends i.Component {
         render() {
-            return i.createElement(_, null)
+            return i.createElement(C, null)
         }
     }
-    var P = C;
-    l.b.add(h, m, c, u, s, p, f);
-    const O = new a.Store({
+    var O = P;
+    l.b.add(h, y, c, u, s, p, f, m);
+    const N = new a.Store({
         portName: "clipboard-share"
     });
-    O.ready().then(() => {
+    N.ready().then(() => {
         let e = document.createElement("div");
         e.id = "root", document.body.appendChild(e), Object(r.render)(i.createElement(o.a, {
-            store: O
-        }, i.createElement(P, null)), e)
+            store: N
+        }, i.createElement(O, null)), e)
     })
 }]);
