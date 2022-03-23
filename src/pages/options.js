@@ -7444,7 +7444,7 @@
                 className: "container"
             }, i.createElement("h1", {
                 className: "title"
-            }, "Easy Clipboard Options ", i.createElement("br", null), i.createElement("span", {
+            }, "Clipboard Share Options ", i.createElement("br", null), i.createElement("span", {
                 className: "title-line"
             })), i.createElement("div", {
                 className: "options-grid"
@@ -7471,7 +7471,7 @@
     }
     var m = h;
     const y = new a.Store({
-        portName: "easy-clipboard"
+        portName: "clipboard-share"
     });
     y.ready().then(() => {
         const e = document.createElement("div");

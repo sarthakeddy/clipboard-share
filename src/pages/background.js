@@ -897,7 +897,7 @@
             initContextMenu() {
                 chrome.contextMenus.create({
                     id: "easyCopy",
-                    title: "Copy to Easy Clipboard",
+                    title: "Copy to Clipboard Share",
                     contexts: ["selection"]
                 }), chrome.contextMenus.onClicked.addListener(e => {
                     if ("easyCopy" == e.menuItemId && e.selectionText) {
@@ -937,7 +937,7 @@
     var c = Object(a.c)(u);
     const s = e => {
         Object(n.wrapStore)(c, {
-            portName: "easy-clipboard"
+            portName: "clipboard-share"
         }), c.subscribe(() => {
             const {
                 clipboard: e
