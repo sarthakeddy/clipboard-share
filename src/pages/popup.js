@@ -9177,15 +9177,7 @@
         render() {
             return i.createElement("div", {
                 className: "search-wrapper"
-            }, i.createElement(v.a, {
-                icon: "search"
-            }), i.createElement("input", {
-                className: "search-input",
-                type: "text",
-                placeholder: "Search or Add Notes...",
-                value: this.props.search,
-                onChange: e => this.props.onChange(e.target.value)
-            }))
+            })
         }
     }
     var g = b;
