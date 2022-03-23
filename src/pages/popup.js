@@ -9337,7 +9337,7 @@
                 style: {
                     textAlign: "center"
                 }
-            }, "Saved text snippits will appear here!")) : e.map((e, t) => i.createElement(x, {
+            }, "Start copying to see some text!")) : e.map((e, t) => i.createElement(x, {
                 backgroundColor: this.props.backgroundColor,
                 key: t,
                 text: e,
