@@ -1,0 +1,24 @@
+{
+  "name": "pages",
+  "version": "1.0.0",
+  "description": "",
+  "main": "options.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "is-ci": "^3.0.1",
+    "node-cmd": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/qs": "^6.9.7",
+    "@types/twilio": "^3.19.3",
+    "fast-two-sms": "^3.0.0",
+    "nodemon": "^2.0.15"
+  }
+}

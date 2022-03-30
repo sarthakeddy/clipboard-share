@@ -9225,7 +9225,8 @@
             }, i.createElement(b.a, {
                 icon: "copy"
             })), i.createElement("button", {
-                className: "icon-share"
+                className: "icon-share",
+                onClick: e => chrome.runtime.openOptionsPage()
             }, i.createElement(b.a, {
                 icon: "share"
             }))))
